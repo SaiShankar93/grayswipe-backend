@@ -1,0 +1,455 @@
+openapi: 3.0.0
+info:
+  title: GraySwipe API documentation
+  version: 1.0.0
+  description: API documentation for your Grayswipe Backend 
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /api/auth/signup:
+    post:
+      summary: Register a new user
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Error signing up
+  /api/auth/signin:
+    post:
+      summary: Authenticate user and generate JWT token
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid password
+        '404':
+          description: User not found
+        '500':
+          description: Error signing in
+  /api/store/createstore:
+    post:
+      summary: Create a new store
+      tags: [Store]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '201':
+          description: Store created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '500':
+          description: Error creating store
+  /api/store/getstore:
+    get:
+      summary: Get store by name
+      tags: [Store]
+      parameters:
+        - in: query
+          name: storeName
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  getStore:
+                    $ref: '#/components/schemas/Store'
+        '500':
+          description: Error getting stores
+  /api/store/updatestore:
+    put:
+      summary: Update store details
+      tags: [Store]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '200':
+          description: Store updated successfully
+          content:
+            application/json:
+              properties:
+                _id:
+                  type: string
+        '500':
+          description: Error updating store
+  /api/store/addbankdetails:
+    post:
+      summary: Add bank details to store
+      tags: [Store]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankDetails'
+      responses:
+        '200':
+          description: Bank details added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '500':
+          description: Error adding bank details
+  /api/cart/addtocart:
+    post:
+      summary: Add product to cart
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '201':
+          description: Product added to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: Error adding product to cart
+  /api/cart/all:
+    get:
+      summary: Get all cart items
+      tags: [Cart]
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: Error getting cart items
+  /api/product/newproduct:
+    post:
+      summary: Create a new product
+      tags: [Product]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '500':
+          description: Error creating product
+
+  /api/product/getproduct:
+    get:
+      summary: Get product by name and store
+      tags: [Product]
+      parameters:
+        - in: query
+          name: productName
+          schema:
+            type: string
+        - in: query
+          name: storeName
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: '#/components/schemas/Product'
+        '500':
+          description: Error getting product
+
+  /api/product/all:
+    get:
+      summary: Get all products
+      tags: [Product]
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  allProducts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+        '500':
+          description: Error getting products
+
+  /api/product/editproduct:
+    put:
+      summary: Update product details
+      tags: [Product]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '500':
+          description: Error updating product
+
+  /api/product/delete:
+    get:
+      summary: Delete product by ID
+      tags: [Product]
+      parameters:
+        - in: query
+          name: _id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '500':
+          description: Error deleting product
+  /api/order/placeorder:
+    post:
+      summary: Place an order
+      tags: [Order]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                storeName:
+                  type: string
+                userName:
+                  type: string
+      responses:
+        '201':
+          description: Order placed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '500':
+          description: Error placing order
+
+  /api/order/allorders:
+    get:
+      summary: Get all orders for a store
+      tags: [Order]
+      parameters:
+        - in: query
+          name: storeName
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/'
+        '500':
+          description: Error getting orders
+
+  /api/order/getorder:
+    get:
+      summary: Get order details by ID and store name
+      tags: [Order]
+      parameters:
+        - in: query
+          name: _id
+          schema:
+            type: string
+        - in: query
+          name: storeName
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '500':
+          description: Error getting order
+
+  /api/order/myorders:
+    get:
+      summary: Get all orders for a user
+      tags: [Order]
+      parameters:
+        - in: query
+          name: userName
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+        '500':
+          description: Error getting orders
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        ownerName:
+          type: string
+        storeName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+        mobile:
+          type: number
+    Store:
+      type: object
+      properties:
+        storeName:
+          type: string
+        description:
+          type: string
+        storeLocation:
+          type: string
+        storeOwner:
+          type: string
+        storeMobile:
+          type: number
+        images:
+          type: array
+          items:
+            type: string
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cart'
+        clients:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        bankDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/BankDetails'
+    Cart:
+      type: object
+      properties:
+        userName:
+          type: string
+        cartItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    BankDetails:
+      type: object
+      properties:
+        bankName:
+          type: string
+        accountNumber:
+          type: string
+        IFSC:
+          type: string
+    Style:
+      type: object
+      properties:
+        color:
+          type: string
+        minOrder:
+          type: string
+        sizes:
+          type: string
+        price:
+          type: number
+    Product:
+      type: object
+      properties:
+        storeName:
+          type: string
+        productName:
+          type: string
+        description:
+          type: string
+        imagesNames:
+          type: array
+          items:
+            type: string
+        style:
+          type : array
+          items:
+            $ref: '#/components/schemas/Style'
