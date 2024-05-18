@@ -32,7 +32,7 @@ const createStore = async (req, res) => {
 
 const getStore = async (req, res) => {
     // console.log(req.body);
-    const { storeName } = req.body;
+    const { storeName } = req.params;
     // console.log(storeName)
     try {
         const store = await Store.findOne({ storeName: storeName });
