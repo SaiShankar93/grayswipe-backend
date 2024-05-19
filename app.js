@@ -13,7 +13,8 @@ const cartRoute = require("./routes/cartRoute");
 const orderRoute = require("./routes/orderRoute");
 const clientsRoute = require("./routes/clientsRoute");
 const app = express()
-
+const path = require('path')
+const fs = require('fs')
 connectToMongoDB();
 app.use(cors({
     origin: '*',
@@ -21,6 +22,8 @@ app.use(cors({
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static("public"));
+app.set("view engine", "ejs");
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(docs));
 
@@ -31,10 +34,29 @@ app.use("/api/cart",cartRoute);
 app.use("/api/order",orderRoute);
 app.use("/api/clients",clientsRoute);
 
-const PORT = 3000 || process.env.PORT;
+app.get('/images/:name',async(req,res) => {
+    const name = req.params;
+    console.log(name)
+    res.render('image.ejs',name)
+})
+app.get('/allimages', (req, res) => {
+    const imagesDir = path.join(__dirname, 'public', 'images');
+    fs.readdir(imagesDir, (err, files) => {
+        if (err) {
+            return res.status(500).send('Unable to scan directory: ' + err);
+        }
+        // Filter out non-image files if necessary
+        const images = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+        res.render('allImages.ejs', { images });
+    });
+});
+
+
+const PORT = 5000 || process.env.PORT;
 app.get('/',(req,res) => {
     res.send("server is working well")
 })
+
 app.listen(PORT, () => {
     console.log("Server is running on port http://localhost:3000");
 })
