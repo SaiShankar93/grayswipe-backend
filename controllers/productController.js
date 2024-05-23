@@ -1,18 +1,30 @@
 const Productschema = require('../models/productModel');
 
 const newProduct = async (req, res) => {
-    const imageNames = req.files && req.files.map(file => file.filename);
-    // console.log(req.file.filename);
-    const {storeName, productName, description ,styles} = req.body;
+    const files = req.files;
+
+    const imageUrls = files && files.map(file => (
+        file.location
+    ));
+    
+    console.log(imageUrls)
+    const { storeName, productName, description, styles } = req.body;
     const parsedStyles = JSON.parse(styles);
+
     try {
-        const product = await Productschema.create({storeName, productName, description, styles:parsedStyles,imageNames:imageNames });
+        const product = await Productschema.create({
+            storeName,
+            productName,
+            description,
+            styles: parsedStyles,
+            images: imageUrls
+        });
         res.status(200).json({ product });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Product not created" });
     }
-}
+};
 
 const getProduct = async(req, res) => {
     const {_id} = req.body;

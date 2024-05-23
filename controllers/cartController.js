@@ -3,16 +3,21 @@ const Productschema = require('../models/productModel');
 
 const addToCart = async (req, res) => {
     const { userName, storeName,productName,_id } = req.body;
-    const product = await Productschema.findOne({ _id: _id})
-    // console.log(product)
+    const product = await Productschema.findById({_id})
+    if(!product){
+        res.send({"message":"unable to find the product"})
+    }
+    console.log(product)
     try {
         let user = await Cartschema.findOne({ userName });
 
-        if (!user) {
+        if (!user && product) {
             user = await Cartschema.create({ userName, cartItems: [product] });
         } else {
-            user.cartItems.push(product);
-            await user.save();
+            if(product){
+                user.cartItems.push(product);
+                await user.save();
+            }
         }
         res.status(201).json({ user });
     } catch (error) {
