@@ -3,16 +3,21 @@ const Store = require("../models/Store");
 
 const createStore = async (req, res) => {
     try {
-        const imageNames = req.files && req.files.map((file) => file.filename);
-        console.log(imageNames);
-        const { storeName, description, storeLocation, storeOwner, storeMobile } = req.body;
+        const files = req.files;
+
+        const imageUrls = files && files.map(file => (
+            file.location
+        ));
+        
+        console.log(imageUrls)
+            const { storeName, description, storeLocation, storeOwner, storeMobile } = req.body;
         const store = await Store.create({
             storeName,
             storeMobile,
             description,
             storeLocation,
             storeOwner,
-            imageNames,
+            images:imageUrls,
         });
         store.bankDetails = []
         store.clients = []
