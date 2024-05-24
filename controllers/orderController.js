@@ -55,9 +55,7 @@ const allOrders = async (req, res) => {
     console.log(storeName)
     try {
         const store = await Store.findOne({storeName:storeName});
-        const orders = await Promise.all(store.orders.map(async (orderId) => {
-            return await Cartschema.findById(orderId);
-        }));
+        const orders = store.orders;
         console.log(orders)
         res.status(200).json({ orders });
     }
@@ -66,35 +64,48 @@ const allOrders = async (req, res) => {
         res.status(500).json({ message: 'Error getting orders' });
     }
 }
-const orderProduct = async(req,res) => {
-    const { _id,storeName } = req.body;
-    console.log(storeName,_id)
+const orderProduct = async (req, res) => {
+    const { _id, storeName, userName } = req.body;
+    console.log(storeName, _id);
+  
     try {
-        const store = await Store.findOne({ storeName });
-        const product = await Productschema.findById({_id});
-        console.log(product)
-        if (!store) {
-            return res.status(404).json({ message: 'Store not found' });
-        }
-        if (!store.orders) {
-            store.orders = [];
-        }
-
-        if (store.orders.length === 0) {
-            store.orders[0] = product;
-        } else {
-            store.orders.push(product);
-        }
-        await store.save();
-        console.log("storesaved")
-        
-        res.status(200).json({ store });
+      const store = await Store.findOne({ storeName });
+      const user = await userSchema.findOne({ userName });
+      if (!store) {
+        return res.status(404).json({ message: 'Store not found' });
+      }
+  
+      const product = await Productschema.findById(_id);
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      const isProductInOrders = store.orders.some(order => order._id.toString() === _id);
+  
+      if (isProductInOrders) {
+        return res.status(400).json({ message: 'Product is already in the orders' });
+      }
+  
+      const currentDate = new Date();
+      const productWithUser = { ...product.toObject(), user, orderDate: currentDate };
+  
+      if (!store.orders) {
+        store.orders = [];
+      }
+  
+      console.log(productWithUser);
+      store.orders.push(productWithUser);
+      await store.save();
+      console.log("Store saved");
+  
+      res.status(200).json({ store });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error placing order' });
+      console.error(error);
+      res.status(500).json({ message: 'Error placing order' });
     }
-   
-}
+  };
+  
+  
 const myOrders = async (req, res) => {
     const {userName} = req.body;
     // console.log(userName);

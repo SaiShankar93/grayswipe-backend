@@ -10,7 +10,7 @@ const createStore = async (req, res) => {
         ));
         
         console.log(imageUrls)
-            const { storeName, description, storeLocation, storeOwner, storeMobile } = req.body;
+        const { storeName, description, storeLocation, storeOwner, storeMobile } = req.body;
         const store = await Store.create({
             storeName,
             storeMobile,
@@ -41,7 +41,7 @@ const getStore = async (req, res) => {
     console.log(storeName)
     try {
         const store = await Store.findOne({ storeName: storeName });
-        // console.log('getting store details',store)
+        console.log('getting store details',store)
         res.status(200).json({ store });
     } catch (error) {
         console.error(error);
@@ -50,7 +50,7 @@ const getStore = async (req, res) => {
 };
 const updateStore = async (req, res) => {
     const prevstoreName  = req.body.prevStoreName;
-    // console.log(prevstoreName);
+    console.log(prevstoreName);
     try {
         const store = await Store.findOneAndUpdate(
             { storeName:prevstoreName },

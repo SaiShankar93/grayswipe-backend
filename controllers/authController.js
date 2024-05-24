@@ -8,11 +8,11 @@ dotenv.config();
 const JWT_SECRECT = process.env.JWT_SECRET
 const signup = async (req, res) => {
     try {
-        const { ownerName, storeName,userName, password, email, mobile } = req.body;
+        const { ownerName, storeName,userName, password, email, mobile,address } = req.body;
         // console.log(ownerName, storeName, userName, password,email, mobile);
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = await userSchema.create({ ownerName : ownerName, storeName:storeName,userName:userName, password: hashedPassword, email:email, mobile:mobile });
+        const user = await userSchema.create({ ownerName : ownerName, storeName:storeName,userName:userName, password: hashedPassword, email:email, mobile:mobile,address });
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRECT, { expiresIn: '30d' });
         console.log("user created successfully");

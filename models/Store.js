@@ -20,14 +20,11 @@ const StoreSchema = new mongoose.Schema({
     storeMobile: {
         type: Number,
     },
-    imageNames: {
+    images: {
         type: [String],
         default: []
     },
-    orders: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cart' 
-    }],
+    orders: [],
     clients: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
