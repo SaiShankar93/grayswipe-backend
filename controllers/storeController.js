@@ -1,6 +1,6 @@
 const bankDetailsModel = require("../models/bankDetailsModel");
 const Store = require("../models/Store");
-
+const userSchema = require('../models/userModel')
 const createStore = async (req, res) => {
     try {
         const files = req.files;
@@ -10,7 +10,7 @@ const createStore = async (req, res) => {
         ));
         
         console.log(imageUrls)
-        const { storeName, description, storeLocation, storeOwner, storeMobile } = req.body;
+        const { storeName, description, storeLocation, storeOwner, storeMobile,userName} = req.body;
         const store = await Store.create({
             storeName,
             storeMobile,
@@ -19,6 +19,9 @@ const createStore = async (req, res) => {
             storeOwner,
             images:imageUrls,
         });
+        const user = await userSchema.findOne({userName});
+        user.storeName = storeName;
+        await user.save();
         store.bankDetails = []
         store.clients = []
         store.orders = []

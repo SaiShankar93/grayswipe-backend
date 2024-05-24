@@ -16,7 +16,7 @@ const signup = async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRECT, { expiresIn: '30d' });
         console.log("user created successfully");
-        res.status(200).json({ userName,storeName,email, token,mobile });
+        res.status(200).json({ userName,storeName,email, token,mobile,storeName });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error signing up .' });
