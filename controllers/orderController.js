@@ -1,7 +1,7 @@
 const Store = require("../models/Store");
 const Cartschema = require('../models/cartModel');
 const userSchema = require('../models/userModel');
-const Productschema = require('../models/productModel');
+const Products = require('../models/productModel');
 
 const placeOrder = async (req, res) => {
     const { storeName, userName } = req.body;
@@ -75,7 +75,7 @@ const orderProduct = async (req, res) => {
         return res.status(404).json({ message: 'Store not found' });
       }
   
-      const product = await Productschema.findById(_id);
+      const product = await Products.findById(_id);
       if (!product) {
         return res.status(404).json({ message: 'Product not found' });
       }

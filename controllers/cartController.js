@@ -1,9 +1,9 @@
 const Cartschema = require('../models/cartModel');
-const Productschema = require('../models/productModel');
+const Products = require('../models/productModel');
 
 const addToCart = async (req, res) => {
     const { userName, storeName,productName,_id } = req.body;
-    const product = await Productschema.findById({_id})
+    const product = await Products.findById({_id})
     if(!product){
         res.send({"message":"unable to find the product"})
     }

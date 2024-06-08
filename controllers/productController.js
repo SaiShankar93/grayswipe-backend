@@ -1,18 +1,17 @@
-const Productschema = require('../models/productModel');
+const Products = require('../models/productModel');
 
 const newProduct = async (req, res) => {
     const files = req.files;
 
-    const imageUrls = files && files.map(file => (
-        file.location
-    ));
-    
-    console.log(imageUrls)
+    const imageUrls = files && files.map(file => file.location);
+
+    console.log(imageUrls);
+
     const { storeName, productName, description, styles } = req.body;
-    const parsedStyles = JSON.parse(styles);
 
     try {
-        const product = await Productschema.create({
+        const parsedStyles = JSON.parse(styles);
+        const product = await Products.create({
             storeName,
             productName,
             description,
@@ -26,10 +25,11 @@ const newProduct = async (req, res) => {
     }
 };
 
+
 const getProduct = async(req, res) => {
     const {_id} = req.body;
     try {
-        const product = await Productschema.findById({_id});
+        const product = await Products.findById({_id});
         res.status(200).json({ product });
     } catch (error) {
         console.error(error);
@@ -39,7 +39,7 @@ const getProduct = async(req, res) => {
 
 const allProducts =async (req, res) => {
     try {
-        const allProducts = await Productschema.find({});
+        const allProducts = await Products.find({});
         res.status(200).json({ allProducts });
     } catch (error) {
         console.error(error);
@@ -49,7 +49,7 @@ const allProducts =async (req, res) => {
 const editProduct = async (req, res) => {
     const {_id} = req.body;
     try {
-        const product = await Productschema.findOneAndUpdate({ _id}, { $set: req.body }, { new: true }); 
+        const product = await Products.findOneAndUpdate({ _id}, { $set: req.body }, { new: true }); 
         res.status(200).json({ product });
     }
     catch (error) {
@@ -60,7 +60,7 @@ const editProduct = async (req, res) => {
 const deleteProduct = async(req, res) => {
     const { _id } = req.body;
     try {
-        const product = await Productschema.findOneAndDelete({ _id });
+        const product = await Products.findOneAndDelete({ _id });
         res.status(200).json({ product });
     } catch (error) {
         console.error(error);

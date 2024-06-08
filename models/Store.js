@@ -33,7 +33,7 @@ const StoreSchema = new mongoose.Schema({
         bankName: String,
         accountNumber: Number,
         IFSC: String
-    }]
+    }],
 });
 
 module.exports = mongoose.model("Store", StoreSchema);

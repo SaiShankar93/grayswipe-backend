@@ -1,8 +1,28 @@
 const mongoose = require("mongoose");
 
-  
-const Productschema = new mongoose.Schema({
-    storeName:{
+const styleSchema = new mongoose.Schema({
+    id : {
+        type : Number,
+    },
+    colors: {
+        type: [String]
+    },
+    sizes: {
+        type: [Number]
+    },
+    minOrder: {
+        type: String
+    },
+    price: {
+        type: []
+    },
+    artNo: {
+        type: Number
+    }
+});
+
+const Productschema = new mongoose.Schema({ 
+    storeName: {
         type: String,
         required: true,
     },
@@ -14,13 +34,10 @@ const Productschema = new mongoose.Schema({
         type: String,
         required: true
     },
-    images: [String],
-    styles: {
-        type: [{
-            id: Number,
-            value: String
-        }]
-    }    
+    images: {
+        type: [String]
+    },
+    styles: [styleSchema]
 });
 
-module.exports = mongoose.model("Productschema", Productschema)
+module.exports = mongoose.model("Product", Productschema);

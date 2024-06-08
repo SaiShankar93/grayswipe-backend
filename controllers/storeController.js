@@ -30,7 +30,7 @@ const createStore = async (req, res) => {
         res.status(200).json({ store });
     } catch (error) {
         console.error(error);
-        if (error.code === 11000) { // Check if it's a duplicate key error
+        if (error.code === 11000) { 
             res.status(409).json({ message: "Duplicate store name. Please choose a different store name." });
         }else {
             res.status(500).json({ message: "Error creating store" });
@@ -79,5 +79,6 @@ const addBankDetails = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: "Error adding bank details" });
     }
-} 
+}
+
 module.exports = { createStore, getStore, updateStore ,addBankDetails};
