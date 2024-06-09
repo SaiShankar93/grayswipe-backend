@@ -8,7 +8,7 @@ const styleSchema = new mongoose.Schema({
         type: [String]
     },
     sizes: {
-        type: [Number]
+        type: []
     },
     minOrder: {
         type: String
