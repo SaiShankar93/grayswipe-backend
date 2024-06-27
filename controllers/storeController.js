@@ -44,7 +44,7 @@ const getStore = async (req, res) => {
     console.log(storeName)
     try {
         const store = await Store.findOne({ storeName: storeName });
-        console.log('getting store details',store)
+        // console.log('getting store details',store)
         res.status(200).json({ store });
     } catch (error) {
         console.error(error);
